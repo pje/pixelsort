@@ -24,8 +24,9 @@ struct SortPlan;
 typedef struct PixelSortingContext Context_t;
 typedef struct Pixel {
 	const unsigned char r;
-	const unsigned char g; 
-	const unsigned char b; 
+	const unsigned char g;
+	const unsigned char b;
+	const unsigned char a;
 } Pixel_t;
 
 // Sorting Function Typedefs
@@ -43,7 +44,7 @@ typedef struct SortPlan {
 
 	Orientation_e orientation;
 
-	run_processor_fn_t run_processor_fn;	
+	run_processor_fn_t run_processor_fn;
 	sort_val_fn_t sort_val_fn;
 	compare_fn_t compare_fn;
 
@@ -301,7 +302,7 @@ int get_first_non_light(const Pixel_t * pixels, sort_val_fn_t v, const int lengt
 }
 
 /**
- * TODO: We can go farther with macros here, which might 
+ * TODO: We can go farther with macros here, which might
  * be nice if more value types are added.
  */
 

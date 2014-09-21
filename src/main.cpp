@@ -7,7 +7,7 @@
 #include "../include/sorting.h"
 
 #define ARG_ROW "row"
-#define ARG_COLUMN "column"
+#define ARG_COLUMN "col"
 #define ARG_BOTH "both"
 
 #define ARG_DARK "dark"
@@ -24,7 +24,25 @@ using namespace std;
 
 int main(const int argc, const char* argv[]) {
 	if(argc < 6) {
-		printf("usage: pixelsort [row|column|both] [all|dark threshold|light threshold] [avg|mul|max|min|xor] [src.jpg] [dest.jpg]\n");
+		printf("usage: pixelsort [orientation] [method] [comparator] <in.png> <out.png>\n");
+		printf("\n");
+		printf("orientation:\n");
+		printf("  row\n");
+		printf("  col\n");
+		printf("  both\n");
+		printf("\n");
+		printf("method:\n");
+		printf("  all\n");
+		printf("  dark\n");
+		printf("  threshold\n");
+		printf("\n");
+		printf("comparator:\n");
+		printf("  avg\n");
+		printf("  mul\n");
+		printf("  max\n");
+		printf("  min\n");
+		printf("  xor\n");
+		printf("\n");
 		return 1;
 	}
 
@@ -42,7 +60,7 @@ int main(const int argc, const char* argv[]) {
 	printf("Using destination: %s\n", destination);
 
 	struct Image * image = read_image(source);
-	struct PixelSortingContext * ctx = create_context();	
+	struct PixelSortingContext * ctx = create_context();
 
 	set_sort_direction(ctx, ASC);
 
