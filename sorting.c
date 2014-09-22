@@ -82,14 +82,14 @@ pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * 
 
     /*
     if(ROW != plan_ptr->orientation) {
-    	pixel_t * pixels = (pixel_t*)malloc(sizeof(pixel_t) * width * height);
-    	for(int i = 0; i < width; ++i) {
-    		for(int j = 0; j < height; ++j) {
-    			int src_idx = ((j * width) + i);
-    			int dst_idx = ((i * height) + j);
-    			pixels[dst_idx].data = buffer + (src_idx * channels);
-    		}
-    	}
+        pixel_t * pixels = (pixel_t*)malloc(sizeof(pixel_t) * width * height);
+        for(int i = 0; i < width; ++i) {
+            for(int j = 0; j < height; ++j) {
+                int src_idx = ((j * width) + i);
+                int dst_idx = ((i * height) + j);
+                pixels[dst_idx].data = buffer + (src_idx * channels);
+            }
+        }
     }
     */
 
@@ -104,15 +104,15 @@ void sync_pixels(struct image * img, const sort_plan_t * plan_ptr, const pixel_t
 
     /*
     if(ROW != plan_ptr->orientation) {
-    	unsigned char * buffer = (unsigned char *)malloc(sizeof(unsigned char) * width * height * channels);
-    	for(int i = 0; i < width; ++i) {
-    		for(int j = 0; j < height; ++j) {
-    			int src_idx = ((i * height) + j);
-    			int dst_idx = ((j * width) + i);
-    			unsigned char * data = buffer + (channels * dst_idx);
-    			for(int c = 0; c < channels; ++c) data[c] = pixels[src_idx].data[c];
-    		}
-    	}
+        unsigned char * buffer = (unsigned char *)malloc(sizeof(unsigned char) * width * height * channels);
+        for(int i = 0; i < width; ++i) {
+            for(int j = 0; j < height; ++j) {
+                int src_idx = ((i * height) + j);
+                int dst_idx = ((j * width) + i);
+                unsigned char * data = buffer + (channels * dst_idx);
+                for(int c = 0; c < channels; ++c) data[c] = pixels[src_idx].data[c];
+            }
+        }
         img->buffer = buffer;
     }
     */
@@ -135,7 +135,7 @@ sort_plan_t * create_sort_plan(const struct image * img, const context_t * ctx, 
     plan->context_ptr = ctx;
     plan->is_ascending = (ASC == ctx->sort_direction) ? 1 : 0;
     plan->run_length = (ROW == o) ? img->width  : img->height;
-    plan->run_count	 = (ROW == o) ? img->height : img->width;
+    plan->run_count     = (ROW == o) ? img->height : img->width;
 
     // Set the run type
     switch(ctx->run_type) {
