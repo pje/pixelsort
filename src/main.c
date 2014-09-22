@@ -21,76 +21,78 @@
 #define ARG_MIN "min"
 #define ARG_XOR "xor"
 
-void print_usage() {
-	printf("usage: pixelsort [orientation] [method] [comparator] <in.png> <out.png>\n");
-	printf("\n");
-	printf("orientation:\n");
-	printf("  row\n");
-	printf("  col\n");
-	printf("  both\n");
-	printf("\n");
-	printf("method:\n");
-	printf("  all\n");
-	printf("  dark\n");
-	printf("  threshold\n");
-	printf("\n");
-	printf("comparator:\n");
-	printf("  avg\n");
-	printf("  mul\n");
-	printf("  max\n");
-	printf("  min\n");
-	printf("  xor\n");
-	printf("\n");
+void print_usage()
+{
+    printf("usage: pixelsort [orientation] [method] [comparator] <in.png> <out.png>\n");
+    printf("\n");
+    printf("orientation:\n");
+    printf("  row\n");
+    printf("  col\n");
+    printf("  both\n");
+    printf("\n");
+    printf("method:\n");
+    printf("  all\n");
+    printf("  dark\n");
+    printf("  threshold\n");
+    printf("\n");
+    printf("comparator:\n");
+    printf("  avg\n");
+    printf("  mul\n");
+    printf("  max\n");
+    printf("  min\n");
+    printf("  xor\n");
+    printf("\n");
 }
 
-int main(const int argc, const char* argv[]) {
-	if(argc < 6) {
-		print_usage();
-		return 1;
-	}
+int main(const int argc, const char* argv[])
+{
+    if(argc < 6) {
+        print_usage();
+        return 1;
+    }
 
-	const char * orientation = argv[1];
-	const char * method = argv[2];
-	const char * comparator = argv[3];
-	const char * source = argv[4];
-	const char * destination = argv[5];
+    const char * orientation = argv[1];
+    const char * method = argv[2];
+    const char * comparator = argv[3];
+    const char * source = argv[4];
+    const char * destination = argv[5];
 
-	struct Image * image = read_image(source);
-	struct PixelSortingContext * ctx = create_context();
+    struct Image * image = read_image(source);
+    struct PixelSortingContext * ctx = create_context();
 
-	set_sort_direction(ctx, ASC);
+    set_sort_direction(ctx, ASC);
 
-	if(0 == strcmp(ARG_ROW, orientation)) {
-		set_orientation(ctx, ROW);
-	} else if(0 == strcmp(ARG_COLUMN, orientation)) {
-		set_orientation(ctx, ROW);
-	} else {
-		set_orientation(ctx, BOTH);
-	}
+    if(0 == strcmp(ARG_ROW, orientation)) {
+        set_orientation(ctx, ROW);
+    } else if(0 == strcmp(ARG_COLUMN, orientation)) {
+        set_orientation(ctx, ROW);
+    } else {
+        set_orientation(ctx, BOTH);
+    }
 
-	if(0 == strcmp(ARG_DARK, method)) {
-		set_run_type(ctx, DARK);
-		set_threshold(ctx, /*DARK,*/ 45);
-	} else if(0 == strcmp(ARG_LIGHT, method)) {
-		set_run_type(ctx, LIGHT);
-		set_threshold(ctx, /*LIGHT,*/ 210);
-	} else {
-		set_run_type(ctx, ALL);
-	}
+    if(0 == strcmp(ARG_DARK, method)) {
+        set_run_type(ctx, DARK);
+        set_threshold(ctx, /*DARK,*/ 45);
+    } else if(0 == strcmp(ARG_LIGHT, method)) {
+        set_run_type(ctx, LIGHT);
+        set_threshold(ctx, /*LIGHT,*/ 210);
+    } else {
+        set_run_type(ctx, ALL);
+    }
 
-	if(0 == strcmp(ARG_AVG, comparator)) {
-		set_comparison(ctx, AVG);
-	} else if(0 == strcmp(ARG_MUL, comparator)) {
-		set_comparison(ctx, MUL);
-	} else if(0 == strcmp(ARG_MAX, comparator)) {
-		set_comparison(ctx, MAX);
-	} else if(0 == strcmp(ARG_MIN, comparator)) {
-		set_comparison(ctx, MIN);
-	} else {
-		set_comparison(ctx, XOR);
-	}
+    if(0 == strcmp(ARG_AVG, comparator)) {
+        set_comparison(ctx, AVG);
+    } else if(0 == strcmp(ARG_MUL, comparator)) {
+        set_comparison(ctx, MUL);
+    } else if(0 == strcmp(ARG_MAX, comparator)) {
+        set_comparison(ctx, MAX);
+    } else if(0 == strcmp(ARG_MIN, comparator)) {
+        set_comparison(ctx, MIN);
+    } else {
+        set_comparison(ctx, XOR);
+    }
 
-	sort(image, ctx);
+    sort(image, ctx);
 
-	write_image(image, destination);
+    write_image(image, destination);
 }
