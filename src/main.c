@@ -1,6 +1,7 @@
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "../include/read_write.h"
 #include "../include/sorting_context.h"
@@ -20,44 +21,39 @@
 #define ARG_MIN "min"
 #define ARG_XOR "xor"
 
-using namespace std;
+void print_usage() {
+	printf("usage: pixelsort [orientation] [method] [comparator] <in.png> <out.png>\n");
+	printf("\n");
+	printf("orientation:\n");
+	printf("  row\n");
+	printf("  col\n");
+	printf("  both\n");
+	printf("\n");
+	printf("method:\n");
+	printf("  all\n");
+	printf("  dark\n");
+	printf("  threshold\n");
+	printf("\n");
+	printf("comparator:\n");
+	printf("  avg\n");
+	printf("  mul\n");
+	printf("  max\n");
+	printf("  min\n");
+	printf("  xor\n");
+	printf("\n");
+}
 
 int main(const int argc, const char* argv[]) {
 	if(argc < 6) {
-		printf("usage: pixelsort [orientation] [method] [comparator] <in.png> <out.png>\n");
-		printf("\n");
-		printf("orientation:\n");
-		printf("  row\n");
-		printf("  col\n");
-		printf("  both\n");
-		printf("\n");
-		printf("method:\n");
-		printf("  all\n");
-		printf("  dark\n");
-		printf("  threshold\n");
-		printf("\n");
-		printf("comparator:\n");
-		printf("  avg\n");
-		printf("  mul\n");
-		printf("  max\n");
-		printf("  min\n");
-		printf("  xor\n");
-		printf("\n");
+		print_usage();
 		return 1;
 	}
 
-	// Set up the argument strings
 	const char * orientation = argv[1];
 	const char * method = argv[2];
 	const char * comparator = argv[3];
 	const char * source = argv[4];
 	const char * destination = argv[5];
-
-	// printf("Using orientation: %s\n", orientation);
-	// printf("Using method: %s\n", method);
-	// printf("Using comparator: %s\n", comparator);
-	// printf("Using source: %s\n", source);
-	// printf("Using destination: %s\n", destination);
 
 	struct Image * image = read_image(source);
 	struct PixelSortingContext * ctx = create_context();

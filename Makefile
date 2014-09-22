@@ -1,21 +1,14 @@
-CC       := g++
-LD       := g++
-CXXFLAGS := -std=c++11 -Werror -Wall -O3
+CC ?= clang
+CFLAGS := -std=c11 -Werror -Wall -Wpedantic -O3
 
-SRC_DIR := src
-INCLUDE := include
-BIN     := bin
+object_files := $(patsubst src/%.c, src/%.o, $(wildcard src/*.c))
 
-OBJECTS := $(SRC_DIR)/sorting.o $(SRC_DIR)/sorting_context.o $(SRC_DIR)/lodepng.o $(SRC_DIR)/read_write.o $(SRC_DIR)/main.o
-
-all: bin/pixelsort
-
-bin/pixelsort: $(OBJECTS)
-	$(LD) -o $(@) $(CXXFLAGS) $(^)
+bin/pixelsort: $(object_files)
+	$(CC) -o $(@) $(CFLAGS) $(^)
 
 clean:
-	rm -rf src/*.o
+	rm -rf $(object_files)
 	rm -rf bin/*
 
-bin/example_png_info: $(SRC_DIR)/lodepng.o $(SRC_DIR)/example_png_info.o
-	$(LD) -o $(@) $(CXXFLAGS) $(^)
+.PHONY: clean
+.DEFAULT: bin/pixelsort

@@ -1,15 +1,10 @@
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "../include/read_write.h"
-
-#include <iostream>
-
-#include <cstdlib>
-#include <cassert>
-#include <cstdio>
-#include <cstring>
-
 #include "../include/lodepng.h"
-
-using namespace std;
 
 typedef struct Pixel Pixel_t;
 
@@ -24,7 +19,7 @@ struct Image * read_image(const char * const file) {
 	unsigned error;
 	FILE * src;
 	if(NULL == (src = fopen(file, "rb"))) {
-		cout << "unable to open source file: " << file << endl;
+		printf("unable to open source file: %s\n", file);
 	}
 
 	Image_t * img = (Image_t*)malloc(sizeof(Image_t));
@@ -35,18 +30,13 @@ struct Image * read_image(const char * const file) {
   error = lodepng_decode32_file(&(img->buffer), &(img->width), &(img->height), file);
   if(error) printf("error %u: %s\n", error, lodepng_error_text(error));
 
-	// printf("img\n");
-	// printf("  width: %d\n", img->width);
-	// printf("  height: %d\n", img->height);
-	// printf("  components: %d\n", img->components);
-
 	return img;
 }
 
 void write_image(Image_t * img, const char * const file) {
 	FILE * dest;
 	if(NULL == (dest = fopen(file, "wb"))) {
-		cout << "unable to open destination file: " << file << endl;
+		printf("unable to open destination file: %s\n", file);
 	}
 
   unsigned error = lodepng_encode32_file(file, img->buffer, img->width, img->height);

@@ -1,7 +1,7 @@
+#include <stddef.h>
+#include <stdlib.h>
 #include "../include/read_write.h"
 #include "../include/sorting_context.h"
-
-#include <cassert>
 
 #define COMPONENTS 3
 
@@ -29,7 +29,6 @@ typedef struct Pixel {
 	const unsigned char a;
 } Pixel_t;
 
-// Sorting Function Typedefs
 typedef int(*sort_val_fn_t)(const Pixel_t *);
 typedef int(*compare_fn_t)(const Pixel_t *, const Pixel_t *);
 typedef void(*run_processor_fn_t)(Pixel_t *, const struct SortPlan *);
@@ -42,7 +41,7 @@ typedef struct SortPlan {
 	int is_ascending;
 	long threshold;
 
-	Orientation_e orientation;
+	enum Orientation_e orientation;
 
 	run_processor_fn_t run_processor_fn;
 	sort_val_fn_t sort_val_fn;
@@ -52,67 +51,47 @@ typedef struct SortPlan {
 	struct SortPlan * next_step_ptr;
 } SortPlan_t;
 
-// Sorter
 void sort_run(Pixel_t *, const int, compare_fn_t);
 
-// Run Processors
 void dark_run_processor(Pixel_t *, const SortPlan_t *);
 void light_run_processor(Pixel_t *, const SortPlan_t *);
 void default_run_processor(Pixel_t *, const SortPlan_t *);
 
-// Run Detectors
 int get_first_dark(const Pixel_t *, sort_val_fn_t, const int, const long);
 int get_first_non_dark(const Pixel_t *, sort_val_fn_t, const int, const long);
 int get_first_light(const Pixel_t *, sort_val_fn_t, const int, const long);
 int get_first_non_light(const Pixel_t *, sort_val_fn_t, const int, const long);
 
-// Sort Value Extractors
 static int AVG_VAL(const Pixel_t *);
 static int MUL_VAL(const Pixel_t *);
 static int MAX_VAL(const Pixel_t *);
 static int MIN_VAL(const Pixel_t *);
 static int XOR_VAL(const Pixel_t *);
 
-// Comparison Funtions
 static int AVG_CMP(const Pixel_t *, const Pixel_t *);
 static int MUL_CMP(const Pixel_t *, const Pixel_t *);
 static int MAX_CMP(const Pixel_t *, const Pixel_t *);
 static int MIN_CMP(const Pixel_t *, const Pixel_t *);
 static int XOR_CMP(const Pixel_t *, const Pixel_t *);
 
-/**
- * Create a list of Pixel_t objects using the given Image and PixelSortingContext
- */
 static Pixel_t * create_pixel_list(const struct Image * const, const SortPlan_t *);
-
-/**
- * Sync the pixel list with the given image. ALWAYS call before returning from a sort call.
- */
 static void sync_pixels(struct Image *, const SortPlan_t *, const Pixel_t *);
-
-/**
- * Set the sorting functions to use to for this run
- */
-static SortPlan_t * create_sort_plan(const Image *, const Context_t *);
-
-/**
- *
- */
-static SortPlan_t * create_sort_plan(const Image *, const Context_t *, Orientation_e);
-
-/**
- * Destroy the sort plan
- */
+static SortPlan_t * create_sort_plan(const struct Image *, const Context_t *, enum Orientation_e);
 static void destroy_sort_plan(SortPlan_t *);
-
-/**
- * Does the actual sort
- */
 static void do_sort(Pixel_t *, const SortPlan_t *);
 
 void sort(struct Image * img, const Context_t * ctx) {
-	// Create a list of sort plan steps
-	SortPlan_t * plan_steps = create_sort_plan(img, ctx);
+	SortPlan_t *plan_steps;
+
+	if(ROW == get_orientation(ctx)) {
+		plan_steps = create_sort_plan(img, ctx, ROW);
+	} else if(COLUMN == get_orientation(ctx)) {
+		plan_steps = create_sort_plan(img, ctx, COLUMN);
+	} else {
+		plan_steps = create_sort_plan(img, ctx, ROW);
+		plan_steps->next_step_ptr = create_sort_plan(img, ctx, COLUMN);
+	}
+
 
 	for(const SortPlan_t * step = plan_steps; NULL != step; step = step->next_step_ptr) {
 		Pixel_t * pixels = create_pixel_list(img, step);
@@ -166,18 +145,6 @@ void sync_pixels(struct Image * img, const SortPlan_t * plan_ptr, const Pixel_t 
 	*/
 }
 
-SortPlan_t * create_sort_plan(const Image * img, const Context_t * ctx) {
-	if(ROW == get_orientation(ctx)) {
-		return create_sort_plan(img, ctx, ROW);
-	} else if(COLUMN == get_orientation(ctx)) {
-		return create_sort_plan(img, ctx, COLUMN);
-	} else {
-		SortPlan_t * plan_ptr = create_sort_plan(img, ctx, ROW);
-		plan_ptr->next_step_ptr = create_sort_plan(img, ctx, COLUMN);
-		return plan_ptr;
-	}
-}
-
 void destroy_sort_plan(SortPlan_t * plan_list_ptr) {
 	while(NULL != plan_list_ptr) {
 		SortPlan_t * next = plan_list_ptr->next_step_ptr;
@@ -186,7 +153,7 @@ void destroy_sort_plan(SortPlan_t * plan_list_ptr) {
 	}
 }
 
-SortPlan_t * create_sort_plan(const Image * img, const Context_t * ctx, Orientation_e o) {
+SortPlan_t * create_sort_plan(const struct Image * img, const Context_t * ctx, enum Orientation_e o) {
 	SortPlan_t * plan = (SortPlan_t*)malloc(sizeof(SortPlan_t));
 	plan->next_step_ptr = NULL;
 	plan->orientation = o;

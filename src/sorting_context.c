@@ -1,11 +1,11 @@
-#include <cstdlib>
+#include <stdlib.h>
 #include "../include/sorting_context.h"
 
 typedef struct PixelSortingContext {
-	Orientation_e orientation;
-	Comparison_e comparison;
-	SortDirection_e sort_direction;
-	RunType_e run_type;
+	enum Orientation_e orientation;
+	enum Comparison_e comparison;
+	enum SortDirection_e sort_direction;
+	enum RunType_e run_type;
 	void * addendum_one;
 	void * addendum_two;
 } PixelSortingContext_t;
@@ -25,35 +25,35 @@ void destroy_context(struct PixelSortingContext * ctx) {
 	free(ctx);
 }
 
-void set_orientation(struct PixelSortingContext * ctx, Orientation_e o) {
+void set_orientation(struct PixelSortingContext * ctx, enum Orientation_e o) {
 	ctx->orientation = o;
 }
 
-Orientation_e get_orientation(const struct PixelSortingContext * ctx) {
+enum Orientation_e get_orientation(const struct PixelSortingContext * ctx) {
 	return ctx->orientation;
 }
 
-void set_run_type(struct PixelSortingContext * ctx, RunType_e r) { 
+void set_run_type(struct PixelSortingContext * ctx, enum RunType_e r) {
 	ctx->run_type = r;
 }
 
-RunType_e get_run_type(const struct PixelSortingContext * ctx) {
+enum RunType_e get_run_type(const struct PixelSortingContext * ctx) {
 	return ctx->run_type;
 }
 
-void set_comparison(struct PixelSortingContext * ctx, Comparison_e c) {
+void set_comparison(struct PixelSortingContext * ctx, enum Comparison_e c) {
 	ctx->comparison = c;
 }
 
-Comparison_e get_comparison(const struct PixelSortingContext * ctx) {
+enum Comparison_e get_comparison(const struct PixelSortingContext * ctx) {
 	return ctx->comparison;
 }
 
-void set_sort_direction(struct PixelSortingContext * ctx, SortDirection_e s) {
+void set_sort_direction(struct PixelSortingContext * ctx, enum SortDirection_e s) {
 	ctx->sort_direction = s;
 }
 
-SortDirection_e get_sort_direction(const struct PixelSortingContext * ctx) {
+enum SortDirection_e get_sort_direction(const struct PixelSortingContext * ctx) {
 	return ctx->sort_direction;
 }
 
@@ -61,6 +61,6 @@ void set_threshold(struct PixelSortingContext * ctx, /*RunType_e t, */long thres
 	ctx->addendum_one = (void*)threshold;
 }
 
-long get_threshold(const struct PixelSortingContext * ctx/*, RunType_e t*/) {
+long get_threshold(const struct PixelSortingContext * ctx/*, enum RunType_e t*/) {
 	return (long)ctx->addendum_one;
 }

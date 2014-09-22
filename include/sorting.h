@@ -1,5 +1,5 @@
-#ifndef _SORTERS_H
-#define _SORTERS_H
+#ifndef _SORTING_H
+#define _SORTING_H
 
 #include "read_write.h"
 #include "sorting_context.h"
