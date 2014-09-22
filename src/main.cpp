@@ -53,11 +53,11 @@ int main(const int argc, const char* argv[]) {
 	const char * source = argv[4];
 	const char * destination = argv[5];
 
-	printf("Using orientation: %s\n", orientation);
-	printf("Using method: %s\n", method);
-	printf("Using comparator: %s\n", comparator);
-	printf("Using source: %s\n", source);
-	printf("Using destination: %s\n", destination);
+	// printf("Using orientation: %s\n", orientation);
+	// printf("Using method: %s\n", method);
+	// printf("Using comparator: %s\n", comparator);
+	// printf("Using source: %s\n", source);
+	// printf("Using destination: %s\n", destination);
 
 	struct Image * image = read_image(source);
 	struct PixelSortingContext * ctx = create_context();

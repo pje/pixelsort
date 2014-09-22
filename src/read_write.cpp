@@ -35,10 +35,10 @@ struct Image * read_image(const char * const file) {
   error = lodepng_decode32_file(&(img->buffer), &(img->width), &(img->height), file);
   if(error) printf("error %u: %s\n", error, lodepng_error_text(error));
 
-	printf("img\n");
-	printf("  width: %d\n", img->width);
-	printf("  height: %d\n", img->height);
-	printf("  components: %d\n", img->components);
+	// printf("img\n");
+	// printf("  width: %d\n", img->width);
+	// printf("  height: %d\n", img->height);
+	// printf("  components: %d\n", img->components);
 
 	return img;
 }
