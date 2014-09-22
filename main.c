@@ -64,9 +64,6 @@ int main(const int argc, const char* argv[])
     ctx->comparison = XOR;
     ctx->sort_direction = ASC;
     ctx->run_type = ALL;
-    ctx->addendum_one = NULL;
-    ctx->addendum_two = NULL;
-
     ctx->sort_direction = ASC;
 
     if(0 == strcmp(ARG_ROW, orientation)) {

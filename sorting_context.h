@@ -14,8 +14,6 @@ typedef struct pixel_sorting_context {
     enum sort_direction_e sort_direction;
     enum run_type_e run_type;
     long threshold;
-    void * addendum_one;
-    void * addendum_two;
 } pixel_sorting_context_t;
 
 #endif
