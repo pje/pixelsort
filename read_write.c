@@ -17,7 +17,7 @@ struct image * read_image(const char * const file)
     image_t * img = (image_t*)malloc(sizeof(image_t));
     img->height = 0;
     img->width = 0;
-    img->components = 4;
+    img->channels = 4;
 
     error = lodepng_decode32_file(&(img->buffer), &(img->width), &(img->height), file);
     if(error) printf("error %u: %s\n", error, lodepng_error_text(error));

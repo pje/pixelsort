@@ -4,7 +4,7 @@
 #include "sorting.h"
 #include "sorting_context.h"
 
-#define COMPONENTS 3
+#define CHANNELS 3 // we just ignore the alpha channel
 
 #define CMP_FN inline int
 #define VAL_FN inline int
@@ -76,8 +76,8 @@ void sort(struct image * img, const context_t * ctx)
 pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * plan_ptr)
 {
     const unsigned char * const buffer = img->buffer;
-    // const int width = img->width, height = img->height, components = img->components;
-    // assert(COMPONENTS == components);
+    // const int width = img->width, height = img->height, channels = img->channels;
+    // assert(CHANNELS == channels);
 
 
     /*
@@ -87,7 +87,7 @@ pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * 
     		for(int j = 0; j < height; ++j) {
     			int src_idx = ((j * width) + i);
     			int dst_idx = ((i * height) + j);
-    			pixels[dst_idx].data = buffer + (src_idx * components);
+    			pixels[dst_idx].data = buffer + (src_idx * channels);
     		}
     	}
     }
@@ -98,19 +98,19 @@ pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * 
 
 void sync_pixels(struct image * img, const sort_plan_t * plan_ptr, const pixel_t * pixels)
 {
-    // const int width = img->width, height = img->height, components = img->components;
-    //assert(COMPONENTS == components);
+    // const int width = img->width, height = img->height, channels = img->channels;
+    //assert(CHANNELS == channels);
 
 
     /*
     if(ROW != plan_ptr->orientation) {
-    	unsigned char * buffer = (unsigned char *)malloc(sizeof(unsigned char) * width * height * components);
+    	unsigned char * buffer = (unsigned char *)malloc(sizeof(unsigned char) * width * height * channels);
     	for(int i = 0; i < width; ++i) {
     		for(int j = 0; j < height; ++j) {
     			int src_idx = ((i * height) + j);
     			int dst_idx = ((j * width) + i);
-    			unsigned char * data = buffer + (components * dst_idx);
-    			for(int c = 0; c < components; ++c) data[c] = pixels[src_idx].data[c];
+    			unsigned char * data = buffer + (channels * dst_idx);
+    			for(int c = 0; c < channels; ++c) data[c] = pixels[src_idx].data[c];
     		}
     	}
         img->buffer = buffer;
@@ -285,21 +285,21 @@ CMP_FN XOR_CMP(const pixel_t * a, const pixel_t * b)
 VAL_FN AVG_VAL(const pixel_t * a)
 {
     int avg = 0;
-    for(int c = 0, len = COMPONENTS; c < len; ++c) avg += ((unsigned char *)a)[c];
-    return avg / COMPONENTS;
+    for(int c = 0, len = CHANNELS; c < len; ++c) avg += ((unsigned char *)a)[c];
+    return avg / CHANNELS;
 }
 
 VAL_FN MUL_VAL(const pixel_t * a)
 {
     int mul = 1;
-    for(int c = 0, len = COMPONENTS; c < len; ++c) mul *= ((unsigned char *)a)[c];
+    for(int c = 0, len = CHANNELS; c < len; ++c) mul *= ((unsigned char *)a)[c];
     return mul;
 }
 
 VAL_FN MAX_VAL(const pixel_t * a)
 {
     int max = -1;
-    for(int c = 0, len = COMPONENTS; c < len; ++c) {
+    for(int c = 0, len = CHANNELS; c < len; ++c) {
         if(((unsigned char *)a)[c] > max) max = ((unsigned char *)a)[c];
     }
     return max;
@@ -308,7 +308,7 @@ VAL_FN MAX_VAL(const pixel_t * a)
 VAL_FN MIN_VAL(const pixel_t * a)
 {
     int min = 256;
-    for(int c = 0, len = COMPONENTS; c < len; ++c) {
+    for(int c = 0, len = CHANNELS; c < len; ++c) {
         if(((unsigned char *)a)[c] < min) min = ((unsigned char *)a)[c];
     }
     return min;
@@ -317,6 +317,6 @@ VAL_FN MIN_VAL(const pixel_t * a)
 VAL_FN XOR_VAL(const pixel_t * a)
 {
     int orx = ((unsigned char *)a)[0];
-    for(int c = 1, len = COMPONENTS; c < len; ++c) orx ^= ((unsigned char *)a)[c];
+    for(int c = 1, len = CHANNELS; c < len; ++c) orx ^= ((unsigned char *)a)[c];
     return orx;
 }

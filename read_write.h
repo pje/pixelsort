@@ -7,7 +7,7 @@ typedef struct image {
     unsigned char *buffer;
     unsigned int width;
     unsigned int height;
-    unsigned int components;
+    unsigned int channels;
 } image_t;
 
 struct image * read_image(const char * const);
