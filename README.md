@@ -10,8 +10,14 @@ a command line tool for pixel-sorting PNG images, written in c.
 $ make
 ```
 
-### usage
+### use
 
 ```sh
-$ pixelsort [row|col|both] [all|dark|threshold] [avg|mul|max|min|xor] <in.png> <out.png>
+$ ./pixelsort [options] <in.png> <out.png>
+
+options:
+  -o, --orientation     [row|column|both] (row)
+  -m, --method          [light|dark|all] (light)
+  -c, --comparator      [avg|mul|max|min|xor] (min)
+  -t, --threshold       [0..255] (210)
 ```

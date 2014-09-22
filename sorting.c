@@ -136,8 +136,6 @@ sort_plan_t * create_sort_plan(const struct image * img, const context_t * ctx, 
     plan->is_ascending = (ASC == ctx->sort_direction) ? 1 : 0;
     plan->run_length = (ROW == o) ? img->width  : img->height;
     plan->run_count     = (ROW == o) ? img->height : img->width;
-
-    // Set the run type
     switch(ctx->run_type) {
     case DARK:
         plan->run_processor_fn = dark_run_processor;
@@ -150,8 +148,6 @@ sort_plan_t * create_sort_plan(const struct image * img, const context_t * ctx, 
         plan->run_processor_fn = default_run_processor;
         break;
     }
-
-    // Set the comparison and sorting functions
     switch(ctx->comparison) {
     case AVG:
         plan->compare_fn = AVG_CMP;
@@ -180,7 +176,6 @@ sort_plan_t * create_sort_plan(const struct image * img, const context_t * ctx, 
 
 void do_sort(pixel_t * pixels, const sort_plan_t * plan)
 {
-    // TODO: Processing runs in parallel. Except thread pools and work queues. :-(
     for(int run = 0; run < plan->run_count; ++run) {
         (*plan->run_processor_fn)(pixels + (run * plan->run_length), plan);
     }
@@ -251,11 +246,6 @@ int get_first_non_light(const pixel_t * pixels, sort_val_fn_t v, const int lengt
     }
     return length;
 }
-
-/**
- * TODO: We can go farther with macros here, which might
- * be nice if more value types are added.
- */
 
 CMP_FN AVG_CMP(const pixel_t * a, const pixel_t * b)
 {

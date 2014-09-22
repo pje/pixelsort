@@ -1,5 +1,2 @@
 *.o
-bin/*
-.DS_Store
-*.jpg
-images/*
+pixelsort
