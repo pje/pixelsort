@@ -92,6 +92,16 @@ pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * 
                 new_pixels[destination_index] = p;
             }
         }
+    } else {
+        for (size_t index = 0; index < ((img->width) * (img->height)); index++) {
+            pixel_t p = {
+                .r = img->buffer[(index * sizeof(pixel_t)) + 0],
+                .g = img->buffer[(index * sizeof(pixel_t)) + 1],
+                .b = img->buffer[(index * sizeof(pixel_t)) + 2],
+                .a = img->buffer[(index * sizeof(pixel_t)) + 3]
+            };
+            new_pixels[index] = p;
+        }
     }
 
     return new_pixels;
@@ -109,6 +119,13 @@ void sync_pixels(struct image * img, const sort_plan_t * plan_ptr, const pixel_t
                 img->buffer[(destination_index * sizeof(pixel_t)) + 2] = pixels[source_index].b;
                 img->buffer[(destination_index * sizeof(pixel_t)) + 3] = pixels[source_index].a;
             }
+        }
+    } else {
+        for (size_t index = 0; index < ((img->width) * (img->height)); index++) {
+            img->buffer[(index * sizeof(pixel_t)) + 0] = pixels[index].r;
+            img->buffer[(index * sizeof(pixel_t)) + 1] = pixels[index].g;
+            img->buffer[(index * sizeof(pixel_t)) + 2] = pixels[index].b;
+            img->buffer[(index * sizeof(pixel_t)) + 3] = pixels[index].a;
         }
     }
 }
