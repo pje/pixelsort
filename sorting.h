@@ -21,7 +21,6 @@ typedef void(*run_processor_fn_t)(pixel_t *, const struct sort_plan *);
 typedef struct sort_plan {
     int run_count;
     int run_length;
-    int is_ascending;
 
     enum orientation_e orientation;
 

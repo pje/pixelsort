@@ -1,5 +1,7 @@
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "read_write.h"
 #include "sorting.h"
 #include "sorting_context.h"
@@ -63,7 +65,6 @@ void sort(struct image * img, const context_t * ctx)
         plan_steps->next_step_ptr = create_sort_plan(img, ctx, COLUMN);
     }
 
-
     for(const sort_plan_t * step = plan_steps; NULL != step; step = step->next_step_ptr) {
         pixel_t * pixels = create_pixel_list(img, step);
         do_sort(pixels, step);
@@ -75,47 +76,41 @@ void sort(struct image * img, const context_t * ctx)
 
 pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * plan_ptr)
 {
-    const unsigned char * const buffer = img->buffer;
-    // const int width = img->width, height = img->height, channels = img->channels;
-    // assert(CHANNELS == channels);
+    pixel_t *new_pixels = (pixel_t*)malloc(sizeof(pixel_t) * img->width * img->height);
 
-
-    /*
-    if(ROW != plan_ptr->orientation) {
-        pixel_t * pixels = (pixel_t*)malloc(sizeof(pixel_t) * width * height);
-        for(int i = 0; i < width; ++i) {
-            for(int j = 0; j < height; ++j) {
-                int src_idx = ((j * width) + i);
-                int dst_idx = ((i * height) + j);
-                pixels[dst_idx].data = buffer + (src_idx * channels);
+    if (ROW != plan_ptr->orientation) {
+        for (size_t column_index = 0; column_index < img->width; column_index++) {
+            for (size_t row_index = 0; row_index < img->height; row_index++) {
+                size_t destination_index = (img->height * column_index) + row_index;
+                size_t source_index = (img->width * row_index) + column_index;
+                pixel_t p = {
+                    .r = img->buffer[(source_index * sizeof(pixel_t)) + 0],
+                    .g = img->buffer[(source_index * sizeof(pixel_t)) + 1],
+                    .b = img->buffer[(source_index * sizeof(pixel_t)) + 2],
+                    .a = img->buffer[(source_index * sizeof(pixel_t)) + 3]
+                };
+                new_pixels[destination_index] = p;
             }
         }
     }
-    */
 
-    return (pixel_t*)buffer;
+    return new_pixels;
 }
 
 void sync_pixels(struct image * img, const sort_plan_t * plan_ptr, const pixel_t * pixels)
 {
-    // const int width = img->width, height = img->height, channels = img->channels;
-    //assert(CHANNELS == channels);
-
-
-    /*
-    if(ROW != plan_ptr->orientation) {
-        unsigned char * buffer = (unsigned char *)malloc(sizeof(unsigned char) * width * height * channels);
-        for(int i = 0; i < width; ++i) {
-            for(int j = 0; j < height; ++j) {
-                int src_idx = ((i * height) + j);
-                int dst_idx = ((j * width) + i);
-                unsigned char * data = buffer + (channels * dst_idx);
-                for(int c = 0; c < channels; ++c) data[c] = pixels[src_idx].data[c];
+    if (ROW != plan_ptr->orientation) {
+        for (size_t column_index = 0; column_index < img->width; column_index++) {
+            for (size_t row_index = 0; row_index < img->height; row_index++) {
+                size_t destination_index = (img->width * row_index) + column_index;
+                size_t source_index = (img->height * column_index) + row_index;
+                img->buffer[(destination_index * sizeof(pixel_t)) + 0] = pixels[source_index].r;
+                img->buffer[(destination_index * sizeof(pixel_t)) + 1] = pixels[source_index].g;
+                img->buffer[(destination_index * sizeof(pixel_t)) + 2] = pixels[source_index].b;
+                img->buffer[(destination_index * sizeof(pixel_t)) + 3] = pixels[source_index].a;
             }
         }
-        img->buffer = buffer;
     }
-    */
 }
 
 void destroy_sort_plan(sort_plan_t * plan_list_ptr)
@@ -133,7 +128,6 @@ sort_plan_t * create_sort_plan(const struct image * img, const context_t * ctx, 
     plan->next_step_ptr = NULL;
     plan->orientation = o;
     plan->context_ptr = ctx;
-    plan->is_ascending = (ASC == ctx->sort_direction) ? 1 : 0;
     plan->run_length = (ROW == o) ? img->width  : img->height;
     plan->run_count     = (ROW == o) ? img->height : img->width;
     switch(ctx->run_type) {

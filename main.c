@@ -91,7 +91,6 @@ int main (int argc, char **argv)
     struct image *img = read_image(source);
 
     pixel_sorting_context_t *ctx = (pixel_sorting_context_t*)malloc(sizeof(pixel_sorting_context_t));
-    ctx->sort_direction = DESC;
 
     if (0 == strcmp(ARG_ROW, orientation_arg_value)) {
         ctx->orientation = ROW;
