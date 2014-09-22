@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../include/read_write.h"
-#include "../include/lodepng.h"
+#include "read_write.h"
+#include "lodepng.h"
 
 typedef struct Pixel Pixel_t;
 

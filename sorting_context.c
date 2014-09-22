@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../include/sorting_context.h"
+#include "sorting_context.h"
 
 typedef struct PixelSortingContext {
     enum Orientation_e orientation;

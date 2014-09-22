@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include <stdlib.h>
-#include "../include/read_write.h"
-#include "../include/sorting_context.h"
+#include "read_write.h"
+#include "sorting_context.h"
 
 #define COMPONENTS 3
 

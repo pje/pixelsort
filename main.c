@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../include/read_write.h"
-#include "../include/sorting_context.h"
-#include "../include/sorting.h"
+#include "read_write.h"
+#include "sorting_context.h"
+#include "sorting.h"
 
 #define ARG_ROW "row"
 #define ARG_COLUMN "col"
