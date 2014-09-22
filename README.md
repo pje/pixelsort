@@ -1,6 +1,6 @@
 ## pixelsort
 
-a command line tool for pixel-sorting PNG images, written in c.
+a command-line tool for pixel-sorting png images.
 
 ![](https://www.dropbox.com/s/23lidkimvjh4ele/sorted%402x.png?dl=1)
 
