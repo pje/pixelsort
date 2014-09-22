@@ -51,48 +51,55 @@ int main(const int argc, const char* argv[])
         return 1;
     }
 
-    const char * orientation = argv[1];
-    const char * method = argv[2];
-    const char * comparator = argv[3];
-    const char * source = argv[4];
-    const char * destination = argv[5];
+    const char *orientation = argv[1];
+    const char *method = argv[2];
+    const char *comparator = argv[3];
+    const char *source = argv[4];
+    const char *destination = argv[5];
 
-    struct Image * image = read_image(source);
-    struct PixelSortingContext * ctx = create_context();
+    struct image *img = read_image(source);
 
-    set_sort_direction(ctx, ASC);
+    pixel_sorting_context_t *ctx = (pixel_sorting_context_t*)malloc(sizeof(pixel_sorting_context_t));
+    ctx->orientation = ROW;
+    ctx->comparison = XOR;
+    ctx->sort_direction = ASC;
+    ctx->run_type = ALL;
+    ctx->addendum_one = NULL;
+    ctx->addendum_two = NULL;
+
+    ctx->sort_direction = ASC;
 
     if(0 == strcmp(ARG_ROW, orientation)) {
-        set_orientation(ctx, ROW);
+        ctx->orientation = ROW;
     } else if(0 == strcmp(ARG_COLUMN, orientation)) {
-        set_orientation(ctx, ROW);
+        ctx->orientation = COLUMN;
     } else {
-        set_orientation(ctx, BOTH);
+        ctx->orientation = BOTH;
     }
 
     if(0 == strcmp(ARG_DARK, method)) {
-        set_run_type(ctx, DARK);
-        set_threshold(ctx, /*DARK,*/ 45);
+        ctx->run_type = DARK;
+        ctx->threshold = 45;
     } else if(0 == strcmp(ARG_LIGHT, method)) {
-        set_run_type(ctx, LIGHT);
-        set_threshold(ctx, /*LIGHT,*/ 210);
+        ctx->run_type = LIGHT;
+        ctx->threshold = 210;
     } else {
-        set_run_type(ctx, ALL);
+        ctx->run_type = ALL;
     }
 
     if(0 == strcmp(ARG_AVG, comparator)) {
-        set_comparison(ctx, AVG);
+        ctx->comparison = AVG;
     } else if(0 == strcmp(ARG_MUL, comparator)) {
-        set_comparison(ctx, MUL);
+        ctx->comparison = MUL;
     } else if(0 == strcmp(ARG_MAX, comparator)) {
-        set_comparison(ctx, MAX);
+        ctx->comparison = MAX;
     } else if(0 == strcmp(ARG_MIN, comparator)) {
-        set_comparison(ctx, MIN);
+        ctx->comparison = MIN;
     } else {
-        set_comparison(ctx, XOR);
+        ctx->comparison = XOR;
     }
 
-    sort(image, ctx);
+    sort(img, ctx);
 
-    write_image(image, destination);
+    write_image(img, destination);
 }

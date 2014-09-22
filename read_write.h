@@ -1,16 +1,16 @@
 #ifndef _READ_WRITE_H
 #define _READ_WRITE_H
 
-struct Image;
+typedef struct pixel pixel_t;
 
-struct Image * read_image(const char * const);
-void write_image(struct Image *, const char * const);
+typedef struct image {
+    unsigned char *buffer;
+    unsigned int width;
+    unsigned int height;
+    unsigned int components;
+} image_t;
 
-int get_width(const struct Image * const);
-int get_height(const struct Image * const);
-int get_components(const struct Image * const);
-
-const unsigned char * const get_buffer(const struct Image * const);
-void set_buffer(struct Image *, unsigned char *);
+struct image * read_image(const char * const);
+void write_image(struct image *, const char * const);
 
 #endif
