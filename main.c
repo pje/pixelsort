@@ -9,7 +9,7 @@
 #include "sorting.h"
 
 #define ARG_ROW "row"
-#define ARG_COLUMN "col"
+#define ARG_COLUMN "column"
 #define ARG_BOTH "both"
 
 #define ARG_DARK "dark"
