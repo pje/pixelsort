@@ -6,8 +6,7 @@
 #include "read_write.h"
 #include "lodepng.h"
 
-struct image * read_image(const char * const file)
-{
+struct image * read_image(const char * const file) {
     unsigned error;
     FILE * src;
     if(NULL == (src = fopen(file, "rb"))) {
@@ -25,8 +24,7 @@ struct image * read_image(const char * const file)
     return img;
 }
 
-void write_image(image_t * img, const char * const file)
-{
+void write_image(image_t * img, const char * const file) {
     FILE * dest;
     if(NULL == (dest = fopen(file, "wb"))) {
         printf("unable to open destination file: %s\n", file);

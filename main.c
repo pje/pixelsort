@@ -22,8 +22,7 @@
 #define ARG_MIN "min"
 #define ARG_XOR "xor"
 
-void print_usage(int argc, char **argv)
-{
+void print_usage(int argc, char **argv) {
     printf("usage: %s [options] <in.png> <out.png>\n", argv[0]);
     printf("\n");
     printf("options:\n");
@@ -34,8 +33,7 @@ void print_usage(int argc, char **argv)
     printf("\n");
 }
 
-int main (int argc, char **argv)
-{
+int main (int argc, char **argv) {
     char* orientation_arg_value = ARG_ROW;
     char* method_arg_value = ARG_LIGHT;
     char* comparator_arg_value = ARG_MIN;
@@ -47,15 +45,13 @@ int main (int argc, char **argv)
     }
 
     int c;
-    while (1)
-    {
-        static struct option long_options[] =
-        {
-          { "orientation",  required_argument, 0, 'o'},
-          { "method",       required_argument, 0, 'm'},
-          { "comparator",   required_argument, 0, 'c'},
-          { "threshold",    required_argument, 0, 't'},
-          { 0, 0, 0, 0 }
+    while (1) {
+        static struct option long_options[] = {
+            { "orientation",  required_argument, 0, 'o'},
+            { "method",       required_argument, 0, 'm'},
+            { "comparator",   required_argument, 0, 'c'},
+            { "threshold",    required_argument, 0, 't'},
+            { 0, 0, 0, 0 }
         };
 
         int option_index = 0;
@@ -64,24 +60,23 @@ int main (int argc, char **argv)
 
         if (c == -1) break;
 
-        switch (c)
-        {
-            case 'o':
-                orientation_arg_value = optarg;
-                break;
-            case 'm':
-                method_arg_value = optarg;
-                break;
-            case 'c':
-                comparator_arg_value = optarg;
-                break;
-            case 't':
-                threshold_arg_value = strtol(optarg, NULL, 10);
-                break;
-            case '?':
-                break;
-            default:
-                abort();
+        switch (c) {
+        case 'o':
+            orientation_arg_value = optarg;
+            break;
+        case 'm':
+            method_arg_value = optarg;
+            break;
+        case 'c':
+            comparator_arg_value = optarg;
+            break;
+        case 't':
+            threshold_arg_value = strtol(optarg, NULL, 10);
+            break;
+        case '?':
+            break;
+        default:
+            abort();
         }
     }
 
@@ -106,14 +101,14 @@ int main (int argc, char **argv)
     if (0 == strcmp(ARG_DARK, method_arg_value)) {
         ctx->run_type = DARK;
         if (threshold_arg_value == -1) {
-           ctx->threshold = 45;
+            ctx->threshold = 45;
         } else {
             ctx->threshold = threshold_arg_value;
         }
     } else if (0 == strcmp(ARG_LIGHT, method_arg_value)) {
         ctx->run_type = LIGHT;
         if (threshold_arg_value == -1) {
-           ctx->threshold = 210;
+            ctx->threshold = 210;
         } else {
             ctx->threshold = threshold_arg_value;
         }

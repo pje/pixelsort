@@ -8,7 +8,11 @@ $(target): $(object_files)
 	$(CC) -o $(@) $(CFLAGS) $(^)
 
 clean:
-	rm -rf $(object_files) $(target)
+	rm -rf $(object_files) $(target) *.orig
 
-.PHONY: clean
+format:
+	astyle --options=.astylerc $(wildcard *.c)
+	rm *.orig
+
+.PHONY: clean format
 .DEFAULT: pixelsort

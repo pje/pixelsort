@@ -52,8 +52,7 @@ static sort_plan_t * create_sort_plan(const struct image *, const context_t *, e
 static void destroy_sort_plan(sort_plan_t *);
 static void do_sort(pixel_t *, const sort_plan_t *);
 
-void sort(struct image * img, const context_t * ctx)
-{
+void sort(struct image * img, const context_t * ctx) {
     sort_plan_t *plan_steps;
 
     if(ROW == ctx->orientation) {
@@ -74,8 +73,7 @@ void sort(struct image * img, const context_t * ctx)
     destroy_sort_plan(plan_steps);
 }
 
-pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * plan_ptr)
-{
+pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * plan_ptr) {
     pixel_t *new_pixels = (pixel_t*)malloc(sizeof(pixel_t) * img->width * img->height);
 
     if (ROW != plan_ptr->orientation) {
@@ -107,8 +105,7 @@ pixel_t * create_pixel_list(const struct image * const img, const sort_plan_t * 
     return new_pixels;
 }
 
-void sync_pixels(struct image * img, const sort_plan_t * plan_ptr, const pixel_t * pixels)
-{
+void sync_pixels(struct image * img, const sort_plan_t * plan_ptr, const pixel_t * pixels) {
     if (ROW != plan_ptr->orientation) {
         for (size_t column_index = 0; column_index < img->width; column_index++) {
             for (size_t row_index = 0; row_index < img->height; row_index++) {
@@ -130,8 +127,7 @@ void sync_pixels(struct image * img, const sort_plan_t * plan_ptr, const pixel_t
     }
 }
 
-void destroy_sort_plan(sort_plan_t * plan_list_ptr)
-{
+void destroy_sort_plan(sort_plan_t * plan_list_ptr) {
     while(NULL != plan_list_ptr) {
         sort_plan_t * next = plan_list_ptr->next_step_ptr;
         free(plan_list_ptr);
@@ -139,8 +135,7 @@ void destroy_sort_plan(sort_plan_t * plan_list_ptr)
     }
 }
 
-sort_plan_t * create_sort_plan(const struct image * img, const context_t * ctx, enum orientation_e o)
-{
+sort_plan_t * create_sort_plan(const struct image * img, const context_t * ctx, enum orientation_e o) {
     sort_plan_t * plan = (sort_plan_t*)malloc(sizeof(sort_plan_t));
     plan->next_step_ptr = NULL;
     plan->orientation = o;
@@ -185,15 +180,13 @@ sort_plan_t * create_sort_plan(const struct image * img, const context_t * ctx, 
     return plan;
 }
 
-void do_sort(pixel_t * pixels, const sort_plan_t * plan)
-{
+void do_sort(pixel_t * pixels, const sort_plan_t * plan) {
     for(int run = 0; run < plan->run_count; ++run) {
         (*plan->run_processor_fn)(pixels + (run * plan->run_length), plan);
     }
 }
 
-void dark_run_processor(pixel_t * pixels, const sort_plan_t * plan_ptr)
-{
+void dark_run_processor(pixel_t * pixels, const sort_plan_t * plan_ptr) {
     const int length = plan_ptr->run_length, threshold = plan_ptr->context_ptr->threshold;
     pixel_t * cursor = pixels;
     while(length > (cursor - pixels)) {
@@ -204,8 +197,7 @@ void dark_run_processor(pixel_t * pixels, const sort_plan_t * plan_ptr)
     }
 }
 
-void light_run_processor(pixel_t * pixels, const sort_plan_t * plan)
-{
+void light_run_processor(pixel_t * pixels, const sort_plan_t * plan) {
     const int length = plan->run_length, threshold = plan->context_ptr->threshold;
     pixel_t * cursor = pixels;
     while(length > (cursor - pixels)) {
@@ -216,89 +208,75 @@ void light_run_processor(pixel_t * pixels, const sort_plan_t * plan)
     }
 }
 
-void default_run_processor(pixel_t * pixels, const sort_plan_t * plan)
-{
+void default_run_processor(pixel_t * pixels, const sort_plan_t * plan) {
     sort_run(pixels, plan->run_length, plan->compare_fn);
 }
 
-void sort_run(pixel_t * start, const int length, compare_fn_t cmp)
-{
+void sort_run(pixel_t * start, const int length, compare_fn_t cmp) {
     qsort(start, length, sizeof(pixel_t), (int(*)(const void*,const void*))cmp);
 }
 
-int get_first_dark(const pixel_t * pixels, sort_val_fn_t v, const int length, const long threshold)
-{
+int get_first_dark(const pixel_t * pixels, sort_val_fn_t v, const int length, const long threshold) {
     for(int idx = 0; idx < length; ++idx) {
         if(threshold >= (*v)(pixels + idx)) return idx;
     }
     return length;
 }
 
-int get_first_non_dark(const pixel_t * pixels, sort_val_fn_t v, const int length, const long threshold)
-{
+int get_first_non_dark(const pixel_t * pixels, sort_val_fn_t v, const int length, const long threshold) {
     for(int idx = 0; idx < length; ++idx) {
         if(threshold < (*v)(pixels + idx)) return idx;
     }
     return length;
 }
 
-int get_first_light(const pixel_t * pixels, sort_val_fn_t v, const int length, const long threshold)
-{
+int get_first_light(const pixel_t * pixels, sort_val_fn_t v, const int length, const long threshold) {
     for(int idx = 0; idx < length; ++idx) {
         if(threshold <= (*v)(pixels + idx)) return idx;
     }
     return length;
 }
 
-int get_first_non_light(const pixel_t * pixels, sort_val_fn_t v, const int length, const long threshold)
-{
+int get_first_non_light(const pixel_t * pixels, sort_val_fn_t v, const int length, const long threshold) {
     for(int idx = 0; idx < length; ++idx) {
         if(threshold > (*v)(pixels + idx)) return idx;
     }
     return length;
 }
 
-CMP_FN AVG_CMP(const pixel_t * a, const pixel_t * b)
-{
+CMP_FN AVG_CMP(const pixel_t * a, const pixel_t * b) {
     return AVG_VAL(a) - AVG_VAL(b);
 }
 
-CMP_FN MUL_CMP(const pixel_t * a, const pixel_t * b)
-{
+CMP_FN MUL_CMP(const pixel_t * a, const pixel_t * b) {
     return MUL_VAL(a) - MUL_VAL(b);
 }
 
-CMP_FN MAX_CMP(const pixel_t * a, const pixel_t * b)
-{
+CMP_FN MAX_CMP(const pixel_t * a, const pixel_t * b) {
     return MAX_VAL(a) - MAX_VAL(b);
 }
 
-CMP_FN MIN_CMP(const pixel_t * a, const pixel_t * b)
-{
+CMP_FN MIN_CMP(const pixel_t * a, const pixel_t * b) {
     return MIN_VAL(a) - MIN_VAL(b);
 }
 
-CMP_FN XOR_CMP(const pixel_t * a, const pixel_t * b)
-{
+CMP_FN XOR_CMP(const pixel_t * a, const pixel_t * b) {
     return XOR_VAL(a) - XOR_VAL(b);
 }
 
-VAL_FN AVG_VAL(const pixel_t * a)
-{
+VAL_FN AVG_VAL(const pixel_t * a) {
     int avg = 0;
     for(int c = 0, len = CHANNELS; c < len; ++c) avg += ((unsigned char *)a)[c];
     return avg / CHANNELS;
 }
 
-VAL_FN MUL_VAL(const pixel_t * a)
-{
+VAL_FN MUL_VAL(const pixel_t * a) {
     int mul = 1;
     for(int c = 0, len = CHANNELS; c < len; ++c) mul *= ((unsigned char *)a)[c];
     return mul;
 }
 
-VAL_FN MAX_VAL(const pixel_t * a)
-{
+VAL_FN MAX_VAL(const pixel_t * a) {
     int max = -1;
     for(int c = 0, len = CHANNELS; c < len; ++c) {
         if(((unsigned char *)a)[c] > max) max = ((unsigned char *)a)[c];
@@ -306,8 +284,7 @@ VAL_FN MAX_VAL(const pixel_t * a)
     return max;
 }
 
-VAL_FN MIN_VAL(const pixel_t * a)
-{
+VAL_FN MIN_VAL(const pixel_t * a) {
     int min = 256;
     for(int c = 0, len = CHANNELS; c < len; ++c) {
         if(((unsigned char *)a)[c] < min) min = ((unsigned char *)a)[c];
@@ -315,8 +292,7 @@ VAL_FN MIN_VAL(const pixel_t * a)
     return min;
 }
 
-VAL_FN XOR_VAL(const pixel_t * a)
-{
+VAL_FN XOR_VAL(const pixel_t * a) {
     int orx = ((unsigned char *)a)[0];
     for(int c = 1, len = CHANNELS; c < len; ++c) orx ^= ((unsigned char *)a)[c];
     return orx;
