@@ -2,7 +2,7 @@
 
 a command-line tool for pixel-sorting png images.
 
-![](https://www.dropbox.com/s/23lidkimvjh4ele/sorted%402x.png?dl=1)
+![](https://user-images.githubusercontent.com/319655/43423202-bdb21664-9419-11e8-82a0-72988c71dc92.png)
 
 ### build
 
