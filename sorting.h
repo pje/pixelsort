@@ -8,10 +8,10 @@ struct sort_plan;
 typedef struct pixel_sorting_context context_t;
 
 typedef struct pixel {
-    const unsigned char r;
-    const unsigned char g;
-    const unsigned char b;
-    const unsigned char a;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
 } pixel_t;
 
 typedef int(*sort_val_fn_t)(const pixel_t *);
